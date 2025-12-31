@@ -133,13 +133,13 @@ export default function ShoppingListComponent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">
+      <div className="max-w-2xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
               🛒 Lista de Compras
             </h1>
-            <div className="text-sm text-gray-600">
+            <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
               {completedCount} de {items.length} concluído
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function ShoppingListComponent() {
             )}
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
             <p className="text-xs text-gray-500 text-center">
               ✨ Sincronização em tempo real ativada
             </p>
