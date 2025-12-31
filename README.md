@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛒 Lista de Compras em Tempo Real
 
-## Getting Started
+Uma aplicação moderna de lista de compras com sincronização em tempo real usando Next.js, SQLite (desenvolvimento) e Socket.io.
 
-First, run the development server:
+## ✨ Características
+
+- ✅ **Sincronização em Tempo Real**: Todos os clientes conectados veem as mudanças instantaneamente
+- 🎨 **Interface Responsiva**: Design moderno com Tailwind CSS
+- ⚡ **Performance**: Construído com Next.js 16 e TypeScript
+- 🔄 **CRUD Completo**: Criar, ler, atualizar e deletar itens
+- 💾 **Banco de Dados Persistente**: SQLite em desenvolvimento, pronto para PostgreSQL
+- 🚀 **Fácil de Usar**: Interface intuitiva e amigável
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React 19 + Next.js 16 (App Router)
+- **Styling**: Tailwind CSS
+- **Backend**: Next.js API Routes
+- **Database**: SQLite (desenvolvimento) / PostgreSQL (produção)
+- **ORM**: Prisma
+- **Real-time**: Socket.io + Socket.io Client
+- **Icons**: Lucide React
+- **Language**: TypeScript
+
+## 📋 Pré-requisitos
+
+- Node.js 18+ e npm
+- (Opcional) PostgreSQL para produção
+
+## 🚀 Instalação e Execução
+
+### 1. Instale as Dependências
+
+```bash
+npm install
+```
+
+### 2. Configure o Banco de Dados
+
+O banco de dados SQLite já está configurado. Se desejar usar PostgreSQL, atualize `.env`:
+
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/lista_compras"
+```
+
+### 3. Execute o Servidor em Modo Desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 Como Usar
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Adicionar Item**: Digite o nome do item e clique em "Adicionar"
+2. **Marcar Concluído**: Clique no círculo para marcar como concluído
+3. **Deletar**: Clique no ícone de lixo para remover
 
-## Learn More
+## 🔧 Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── items/         # API Routes
+│   └── page.tsx           # Página principal
+├── components/
+│   ├── ShoppingList.tsx   # Componente principal
+│   ├── ShoppingItem.tsx   # Item individual
+│   └── AddItemForm.tsx    # Formulário
+├── hooks/
+│   └── useSocket.ts       # Hook Socket.io
+├── lib/
+│   ├── prisma.ts          # Cliente Prisma
+│   └── socketServer.ts    # Gerenciador Socket.io
+└── instrumentation.ts     # Inicialização
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📡 API Endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `GET /api/items` - Listar itens
+- `POST /api/items` - Criar item
+- `PATCH /api/items/[id]` - Atualizar item
+- `DELETE /api/items/[id]` - Deletar item
 
-## Deploy on Vercel
+## 🔄 Sincronização em Tempo Real
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Usa Socket.io com fallback para polling. Eventos:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `item:created` - Novo item criado
+- `item:updated` - Item atualizado
+- `item:deleted` - Item deletado
+
+## 📦 Scripts
+
+```bash
+npm run dev      # Modo desenvolvimento
+npm run build    # Build para produção
+npm start        # Servidor produção
+npm run lint     # Linter
+```
+
+---
+
+**Desenvolvido com ❤️ usando Next.js e Socket.io**
