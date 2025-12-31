@@ -2,7 +2,8 @@ services:
   postgres:
     image: postgres:15
     container_name: lista_compras_db
-    network_mode: host
+    networks:
+      - lista_compras_network
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -15,5 +16,24 @@ services:
       timeout: 5s
       retries: 5
 
+  app:
+    image: guipiri/lista-de-compras:latest
+    container_name: lista_compras_app
+    networks:
+      - lista_compras_network
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/lista_compras
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+
+networks:
+  lista_compras_network:
+    driver: bridge
