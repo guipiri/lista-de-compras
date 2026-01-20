@@ -3,14 +3,71 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const listId = request.nextUrl.searchParams.get("listId");
+    const shareToken = request.nextUrl.searchParams.get("shareToken");
+    const password = request.nextUrl.searchParams.get("pass");
+
     const prisma = await getPrisma();
+
+    // Se tem shareToken, buscar lista compartilhada
+    if (shareToken) {
+      const list = await prisma.shoppingList.findUnique({
+        where: { shareToken },
+        include: { items: { orderBy: { createdAt: "desc" } } },
+      });
+
+      if (!list) {
+        return NextResponse.json(
+          { error: "Lista não encontrada" },
+          { status: 404 }
+        );
+      }
+
+      // Se a lista é privada, verificar senha
+      if (list.isPrivate) {
+        if (!password) {
+          return NextResponse.json(
+            { error: "Senha necessária", requiresPassword: true },
+            { status: 401 }
+          );
+        }
+
+        if (list.password !== password) {
+          return NextResponse.json(
+            { error: "Senha incorreta" },
+            { status: 401 }
+          );
+        }
+      }
+
+      return NextResponse.json(list.items);
+    }
+
+    // Buscar lista padrão (compatibilidade com código antigo)
+    if (listId) {
+      const items = await prisma.shoppingItem.findMany({
+        where: { listId },
+        orderBy: { createdAt: "desc" },
+      });
+      return NextResponse.json(items);
+    }
+
+    // Se nenhum parâmetro, retornar primeira lista ou criar uma
+    let list = await prisma.shoppingList.findFirst();
+
+    if (!list) {
+      list = await prisma.shoppingList.create({
+        data: { name: "Minha Lista" },
+      });
+    }
+
     const items = await prisma.shoppingItem.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
+      where: { listId: list.id },
+      orderBy: { createdAt: "desc" },
     });
+
     return NextResponse.json(items);
   } catch (error) {
     const message =
@@ -27,7 +84,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { title } = await request.json();
+    const { title, listId } = await request.json();
 
     if (!title || typeof title !== "string" || title.trim() === "") {
       return NextResponse.json(
@@ -37,9 +94,24 @@ export async function POST(request: NextRequest) {
     }
 
     const prisma = await getPrisma();
+
+    let finalListId = listId;
+
+    // Se não passou listId, usar a primeira lista ou criar uma
+    if (!finalListId) {
+      let list = await prisma.shoppingList.findFirst();
+      if (!list) {
+        list = await prisma.shoppingList.create({
+          data: { name: "Minha Lista" },
+        });
+      }
+      finalListId = list.id;
+    }
+
     const item = await prisma.shoppingItem.create({
       data: {
         title: title.trim(),
+        listId: finalListId,
       },
     });
 

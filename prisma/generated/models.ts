@@ -8,5 +8,6 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/ShoppingList'
 export type * from './models/ShoppingItem'
 export type * from './commonInputTypes'

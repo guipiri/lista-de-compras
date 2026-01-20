@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  ShoppingList: 'ShoppingList',
   ShoppingItem: 'ShoppingItem'
 } as const
 
@@ -400,10 +401,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "shoppingItem"
+    modelProps: "shoppingList" | "shoppingItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    ShoppingList: {
+      payload: Prisma.$ShoppingListPayload<ExtArgs>
+      fields: Prisma.ShoppingListFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShoppingListFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShoppingListFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>
+        }
+        findFirst: {
+          args: Prisma.ShoppingListFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShoppingListFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>
+        }
+        findMany: {
+          args: Prisma.ShoppingListFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>[]
+        }
+        create: {
+          args: Prisma.ShoppingListCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>
+        }
+        createMany: {
+          args: Prisma.ShoppingListCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ShoppingListCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>[]
+        }
+        delete: {
+          args: Prisma.ShoppingListDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>
+        }
+        update: {
+          args: Prisma.ShoppingListUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>
+        }
+        deleteMany: {
+          args: Prisma.ShoppingListDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShoppingListUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ShoppingListUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>[]
+        }
+        upsert: {
+          args: Prisma.ShoppingListUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShoppingListPayload>
+        }
+        aggregate: {
+          args: Prisma.ShoppingListAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShoppingList>
+        }
+        groupBy: {
+          args: Prisma.ShoppingListGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShoppingListGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShoppingListCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShoppingListCountAggregateOutputType> | number
+        }
+      }
+    }
     ShoppingItem: {
       payload: Prisma.$ShoppingItemPayload<ExtArgs>
       fields: Prisma.ShoppingItemFieldRefs
@@ -517,10 +592,24 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ShoppingListScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isPrivate: 'isPrivate',
+  password: 'password',
+  shareToken: 'shareToken',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShoppingListScalarFieldEnum = (typeof ShoppingListScalarFieldEnum)[keyof typeof ShoppingListScalarFieldEnum]
+
+
 export const ShoppingItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   completed: 'completed',
+  listId: 'listId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -542,6 +631,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -693,6 +790,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  shoppingList?: Prisma.ShoppingListOmit
   shoppingItem?: Prisma.ShoppingItemOmit
 }
 

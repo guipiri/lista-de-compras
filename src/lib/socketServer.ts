@@ -24,19 +24,44 @@ function setupSocketHandlers(io: SocketIOServer) {
   io.on("connection", (socket: Socket) => {
     console.log("✅ Client connected:", socket.id);
 
+    // Evento para entrar em uma room específica da lista
+    socket.on("join:list", (listId: string) => {
+      console.log(`📍 Client ${socket.id} joining list room: ${listId}`);
+      socket.join(`list:${listId}`);
+      socket.data.currentListId = listId;
+    });
+
+    // Evento para sair de uma room da lista
+    socket.on("leave:list", (listId: string) => {
+      console.log(`📍 Client ${socket.id} leaving list room: ${listId}`);
+      socket.leave(`list:${listId}`);
+    });
+
     socket.on("item:create", (data) => {
       console.log("📝 Item created event:", data);
-      socket.broadcast.emit("item:created", data);
+      const listId = data.listId;
+      if (listId) {
+        // Apenas emitir para clientes na mesma lista
+        io!.to(`list:${listId}`).emit("item:created", data);
+      }
     });
 
     socket.on("item:update", (data) => {
       console.log("✏️ Item updated event:", data);
-      socket.broadcast.emit("item:updated", data);
+      const listId = data.listId;
+      if (listId) {
+        // Apenas emitir para clientes na mesma lista
+        io!.to(`list:${listId}`).emit("item:updated", data);
+      }
     });
 
     socket.on("item:delete", (data) => {
       console.log("🗑️ Item deleted event:", data);
-      socket.broadcast.emit("item:deleted", data);
+      const listId = data.listId;
+      if (listId) {
+        // Apenas emitir para clientes na mesma lista
+        io!.to(`list:${listId}`).emit("item:deleted", data);
+      }
     });
 
     socket.on("disconnect", () => {
@@ -55,18 +80,24 @@ export function getSocketIO(): SocketIOServer | null {
 
 export function broadcastItemCreated(item: any) {
   if (io) {
-    io.emit("item:created", item);
+    const listId = item.listId;
+    if (listId) {
+      io.to(`list:${listId}`).emit("item:created", item);
+    }
   }
 }
 
 export function broadcastItemUpdated(item: any) {
   if (io) {
-    io.emit("item:updated", item);
+    const listId = item.listId;
+    if (listId) {
+      io.to(`list:${listId}`).emit("item:updated", item);
+    }
   }
 }
 
-export function broadcastItemDeleted(itemId: string) {
+export function broadcastItemDeleted(itemId: string, listId: string) {
   if (io) {
-    io.emit("item:deleted", itemId);
+    io.to(`list:${listId}`).emit("item:deleted", itemId);
   }
 }

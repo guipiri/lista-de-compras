@@ -1,5 +1,5 @@
-import ShoppingListComponent from "@/components/ShoppingList";
+import HomePage from "@/components/HomePage";
 
 export default function Home() {
-  return <ShoppingListComponent />;
+  return <HomePage />;
 }

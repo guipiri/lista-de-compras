@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ShoppingList: 'ShoppingList',
   ShoppingItem: 'ShoppingItem'
 } as const
 
@@ -70,10 +71,24 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ShoppingListScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isPrivate: 'isPrivate',
+  password: 'password',
+  shareToken: 'shareToken',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShoppingListScalarFieldEnum = (typeof ShoppingListScalarFieldEnum)[keyof typeof ShoppingListScalarFieldEnum]
+
+
 export const ShoppingItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   completed: 'completed',
+  listId: 'listId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -95,4 +110,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
-export function useSocket() {
+export function useSocket(listId?: string) {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
@@ -19,6 +19,11 @@ export function useSocket() {
 
     socketInstance.on("connect", () => {
       console.log("✅ Connected to socket server:", socketInstance.id);
+      
+      // Fazer join na room da lista se houver listId
+      if (listId) {
+        socketInstance.emit("join:list", listId);
+      }
     });
 
     socketInstance.on("connect_error", (error) => {
@@ -31,10 +36,14 @@ export function useSocket() {
 
     setSocket(socketInstance);
 
+    // Cleanup function para deixar a room ao desmontar
     return () => {
+      if (listId) {
+        socketInstance.emit("leave:list", listId);
+      }
       socketInstance.disconnect();
     };
-  }, []);
+  }, [listId]);
 
   return socket;
 }

@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../prisma/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel ShoppingItem {\n  id        String   @id @default(cuid())\n  title     String\n  completed Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../prisma/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel ShoppingList {\n  id         String         @id @default(cuid())\n  name       String         @default(\"Minha Lista\")\n  isPrivate  Boolean        @default(false)\n  password   String?\n  shareToken String         @unique @default(cuid())\n  createdAt  DateTime       @default(now())\n  updatedAt  DateTime       @updatedAt\n  items      ShoppingItem[]\n}\n\nmodel ShoppingItem {\n  id        String       @id @default(cuid())\n  title     String\n  completed Boolean      @default(false)\n  listId    String\n  list      ShoppingList @relation(fields: [listId], references: [id], onDelete: Cascade)\n  createdAt DateTime     @default(now())\n  updatedAt DateTime     @updatedAt\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"ShoppingItem\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"completed\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"ShoppingList\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPrivate\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shareToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"items\",\"kind\":\"object\",\"type\":\"ShoppingItem\",\"relationName\":\"ShoppingItemToShoppingList\"}],\"dbName\":null},\"ShoppingItem\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"completed\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"listId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"list\",\"kind\":\"object\",\"type\":\"ShoppingList\",\"relationName\":\"ShoppingItemToShoppingList\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more ShoppingItems
-   * const shoppingItems = await prisma.shoppingItem.findMany()
+   * // Fetch zero or more ShoppingLists
+   * const shoppingLists = await prisma.shoppingList.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more ShoppingItems
- * const shoppingItems = await prisma.shoppingItem.findMany()
+ * // Fetch zero or more ShoppingLists
+ * const shoppingLists = await prisma.shoppingList.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -175,6 +175,16 @@ export interface PrismaClient<
   }>>
 
       /**
+   * `prisma.shoppingList`: Exposes CRUD operations for the **ShoppingList** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ShoppingLists
+    * const shoppingLists = await prisma.shoppingList.findMany()
+    * ```
+    */
+  get shoppingList(): Prisma.ShoppingListDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.shoppingItem`: Exposes CRUD operations for the **ShoppingItem** model.
     * Example usage:
     * ```ts
