@@ -180,6 +180,29 @@ export default function SharedListPage({
     }
   }
 
+  async function handleEditItemTitle(id: string, title: string) {
+    try {
+      const response = await fetch(`/api/items/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update item title");
+      const updatedItem = await response.json();
+
+      if (socket) {
+        socket.emit("item:update", updatedItem);
+      }
+
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? updatedItem : item))
+      );
+    } catch (error) {
+      console.error("Error updating item title:", error);
+    }
+  }
+
   const handleSubmitPassword = (e: React.FormEvent) => {
     e.preventDefault();
     fetchSharedList();
@@ -283,6 +306,7 @@ export default function SharedListPage({
                     item={item}
                     onToggle={handleToggleItem}
                     onDelete={handleDeleteItem}
+                    onEditTitle={handleEditItemTitle}
                   />
                 ))}
               </div>

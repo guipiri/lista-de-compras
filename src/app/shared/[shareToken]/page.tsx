@@ -6,8 +6,7 @@ interface Props {
   searchParams: Promise<{ pass?: string }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { shareToken } = await params;
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Lista Compartilhada`,
     description: "Acessando lista de compras compartilhada",
